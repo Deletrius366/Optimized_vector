@@ -405,7 +405,7 @@ public:
             }
             dealloc(aux_ptr());
         }
-        if (aux_ptr()->count != 0) {
+        if (!small() && aux_ptr()->count != 0) {
             --aux_ptr()->count;
         }
         data_ = nullptr;
@@ -424,6 +424,7 @@ public:
     }
 
     void reserve(size_t size) {
+        // std::cout << "start" << "\n";
         if (size == 0) return;
         if (empty()) {
             aux *new_aux = aux_alloc(size + 8);
@@ -432,17 +433,19 @@ public:
         } else if (small()) {
             aux *new_aux = aux_alloc(size + 8);
             try {
-                construct(aux_ptr()->get_ptr(), std::get<1>(data_));
+                construct(new_aux->get_ptr(), std::get<1>(data_));
             } catch (...) {
                 dealloc(new_aux);
                 throw;
             }
             new_aux->size = 1;
+            data_ = new_aux;
         } else {
             aux *new_aux = copy(size + aux_capacity());
             clear();
             data_ = new_aux;
         }
+        // std::cout << "end" << "\n";
     }
 
     T const &front() const noexcept {
@@ -605,29 +608,32 @@ public:
     }
 
     void insert(const_iterator it, const T& val) {
+        //cout();
         detach();
         if (empty() || it == end() ) {
-            std::cout << "end" << "\n";
+            // std::cout << "end" << "\n";
             push_back(val);
         } else {
             vector tmp;
             // std::cout << "a" << "\n";
+            std::cout << "start" << "\n";
             tmp.reserve(size() + 2);
             // std::cout << "b" << "\n";
             // size_t pl = it-begin();
             auto i = cbegin();
             try {
-                for (i = begin(); i < it; ++i) {
+                for (; i != it; ++i) {
                     tmp.push_back(*i);
                 }
                 tmp.push_back(val);
-                for (i = it; i != end(); ++i) {
+                for (i = it; i != cend(); ++i) {
                     tmp.push_back(*i);
                 }
             } catch (...) {
                 tmp.clear();
                 throw;
             }
+            std::cout << "end" << "\n";
             *this = tmp;
         }
     }
@@ -644,7 +650,9 @@ public:
             // size_t size = it1 - cbegin() + cend() - it2;
             size_t sizeNow = size() - (it2 - it1);
             vector tmp;
+            // std::cout << "start" << "\n";
             tmp.reserve(sizeNow + 8);
+            // std::cout << "end" << "\n";
             try {
                 for (size_t i = 0; i < pl; i++) {
                     tmp.push_back((*this)[i]);
