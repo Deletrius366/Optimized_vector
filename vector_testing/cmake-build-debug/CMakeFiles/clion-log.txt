@@ -1,0 +1,4 @@
+"D:\CLion 2018.2.5\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_CXX_COMPILER=C:/Program Files (x86)/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/g++.exe" -G "CodeBlocks - MinGW Makefiles" C:\Users\User\CLionProjects\vector_testing
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Users/User/CLionProjects/vector_testing/cmake-build-debug
