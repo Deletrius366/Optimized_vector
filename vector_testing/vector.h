@@ -25,7 +25,7 @@ struct vector_iterator {
 
     vector_iterator() = default;
 
-    vector_iterator(vector_iterator const &) = default;
+    vector_iterator(    vector_iterator const &) = default;
 
     vector_iterator &operator=(vector_iterator const &) = default;
 
@@ -314,7 +314,7 @@ class vector {
     }
 
     aux *copy(size_t ind) {
-        aux *new_aux = aux_alloc(aux_capacity());
+        aux *new_aux = aux_alloc(ind);
         size_t i = 0;
         try {
             for (; i < std::min(ind, size()); ++i) {
@@ -328,7 +328,7 @@ class vector {
             throw;
         }
         new_aux->size = aux_size();
-        new_aux->capacity = aux_capacity();
+        new_aux->capacity = ind;
         new_aux->count = 0;
         return new_aux;
     }
@@ -361,6 +361,8 @@ class vector {
                 dealloc(new_aux);
                 throw;
             }
+            clear();
+            data_ = new_aux;
         }
     }
 
